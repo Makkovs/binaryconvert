@@ -19,14 +19,14 @@ class Main:
     #Интерфейс
     def __init__(self):
         self.binaryno = ['2', '3', '4', '5', '6', '7', '8', '9'] 
-
+ 
         self.he1 = Label(text = 'Двоичное число: ')
         self.he2 = Label(text = 'Десятичное число: ')
 
         self.e1 = Entry(width = "20")
         self.e2 = Entry(width = "20")
 
-        btnok = Button(text = 'Преобразовать', command = self.convertb)
+        btnok = Button(text = 'Преобразовать', command = self.convertBinary)
         btnok.grid(row = 4, column = 2)
 
         self.he1.grid(row = 2, column = 0)
@@ -34,17 +34,31 @@ class Main:
         
         self.e1.grid(row = 2, column = 1)
         self.e2.grid(row = 3, column = 1)
-    #Преобразование из бинарного
-    def convertb(self):
+
+        self.e2.config(state = DISABLED)
+    #Преобразование
+    def convertBinary(self): #Будущее макс. кол-во символов 61
         binary = self.e1.get()
-        decimal = self.e2.get()
         for b in enumerate(self.binaryno):
             if b[1] in binary:
                 self.e1.delete(0, 'end')
                 self.e1.insert(0, 'Ошибка')
                 self.e2.delete(0, 'end')
-                return
+                break
         splitedBin = splitText(binary)
+        mathDegree = lambda a, b : a*(2**b)
+        decimal = 0
+        for d in enumerate(splitedBin):
+            degree = len(splitedBin) - d[0] - 1
+            if degree < 0:
+                break
+            decimal += mathDegree(int(d[1]), degree)
+
+        self.e2.config(state = NORMAL)
+        self.e2.delete(0, 'end')
+        self.e2.insert(0, str(decimal))
+        self.e2.config(state = DISABLED)
+            
         
 main = Main()
 
