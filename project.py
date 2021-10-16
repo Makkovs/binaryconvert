@@ -1,22 +1,18 @@
-#Импорты
 import math
 from tkinter import *
-#Некоторые настройки
+
 tk = Tk()
 tk.resizable(0, 0)
 tk.title('Калькулятор двоичных чисел')
 tk.wm_attributes("-topmost", 0)
 
-#Функции
 def splitText(text):
     splited = []
     for b in enumerate(text):
         splited.append(b[1])
     return splited
 
-#Основной код
 class Main:
-    #Интерфейс
     def __init__(self):
         self.binToDec = True
         self.binaryno = ['2', '3', '4', '5', '6', '7', '8', '9'] 
@@ -39,7 +35,7 @@ class Main:
         self.e2.grid(row = 3, column = 1)
 
         self.e2.config(state = DISABLED)
-    #Кнопка поменять
+
     def remake(self):
         self.e1.delete(0, 'end')
         self.e2.delete(0, 'end')
@@ -50,7 +46,7 @@ class Main:
             self.e2.config(state = DISABLED)
             self.e1.config(state = NORMAL)
         self.binToDec = not self.binToDec
-    #Преобразование
+
     def convertBinary(self, bin): 
         splitedBin = splitText(bin)
         mathDegree = lambda a, b : a*(2**b)
@@ -66,7 +62,31 @@ class Main:
         self.e2.delete(0, 'end')
         self.e2.insert(0, str(decimal))
         self.e2.config(state = DISABLED)
-    #Кнопка преобразовать
+        
+    def convertDecimal(self, dec):
+        binary = ''
+        if dec == 1:
+            binary = '1'
+        else:
+            numbs = []
+            while int(dec) >= 2:
+                dec = int(dec)/2
+                if dec == int(dec):
+                    numbs.append('0')
+                else:
+                    numbs.append('1')
+                if int(dec) == 1:
+                    numbs.append('1')
+            numbsLenght = len(numbs) - 1
+
+            while numbsLenght >= 0:
+                binary += numbs[numbsLenght]
+                numbsLenght -= 1
+        self.e1.config(state = NORMAL)
+        self.e1.delete(0, 'end')
+        self.e1.insert(0, binary)
+        self.e1.config(state = DISABLED)
+
     def convert(self):
         if self.binToDec:
             binary = self.e1.get()
@@ -82,7 +102,18 @@ class Main:
                     return
             self.convertBinary(binary)
         else:
-            pass
+            decimal = self.e2.get()
+            if len(decimal) >= 10:
+                self.e2.delete(0, 'end')
+                self.e2.insert(0, 'Слишком большое число')
+                return
+            if len(decimal) <= 0 or decimal == '0':
+                self.e1.config(state = NORMAL)
+                self.e1.delete(0, 'end')
+                self.e1.insert(0, '0')
+                self.e1.config(state = DISABLED)
+                return
+            self.convertDecimal(int(decimal))
   
 main = Main()
 
